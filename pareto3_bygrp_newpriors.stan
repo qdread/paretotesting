@@ -38,7 +38,7 @@ parameters {
 	vector[M] tau_low_fg;
 	real<lower=0> sigma_tau_low;
 	
-	real<lower=x_min, upper=x_max> tau_high_mean;
+	real<lower=tau_low_mean, upper=x_max> tau_high_mean;
 	vector[M] tau_high_fg;
 	real<lower=0> sigma_tau_high;
 	
