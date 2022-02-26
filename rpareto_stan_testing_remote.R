@@ -105,10 +105,10 @@ data_dump3 <- with(dat3, list(N = nrow(dat3), M = 3, x = x, fg = group, x_min = 
 fit3 <- mod3$sample(
   data = data_dump3,
   seed = 555,
-  chains = 3,
-  parallel_chains = 3,
-  iter_warmup = 500,
-  iter_sampling = 500
+  chains = 4,
+  parallel_chains = 4,
+  iter_warmup = 2000,
+  iter_sampling = 1000
 )
 
 fit3$save_object('/90daydata/shared/qdr/paretotest/paretofit3.rds')
