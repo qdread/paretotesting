@@ -1,9 +1,11 @@
 data {
 	int<lower=0> N;
-	int<lower=0> M; // number of groups
+	int<lower=0> M;
 	vector<lower=0>[N] x;
+	vector<lower=0>[N] y;
+  real<lower=0> x_min;
+  real<lower=0> x_max;
 	int<lower=1,upper=M> fg[N];	// Mapping to groups 1-M
-    real<lower=0> x_min;
 }
 
 parameters {
