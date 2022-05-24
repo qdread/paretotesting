@@ -5,9 +5,9 @@ library(cmdstanr)
 library(tidyverse)
 library(cmdstanr)
 
-dens_mod1 <- cmdstan_model('~/GitHub/NEON/paretotesting/pareto_bygrp_newpriors_noLL.stan')
-dens_mod2 <- cmdstan_model('~/GitHub/NEON/paretotesting/pareto2_bygrp_newpriors_noLL.stan')
-dens_mod3 <- cmdstan_model('~/GitHub/NEON/paretotesting/pareto3_bygrp_newpriors_noLL.stan')
+dens_mod1 <- cmdstan_model('~/GitHub/paretotesting/pareto_bygrp_newpriors_noLL.stan')
+dens_mod2 <- cmdstan_model('~/GitHub/paretotesting/pareto2_bygrp_newpriors_noLL.stan')
+dens_mod3 <- cmdstan_model('~/GitHub/paretotesting/pareto3_bygrp_newpriors_noLL.stan')
 # They compile!!!
 
 # load the data to test it on real data

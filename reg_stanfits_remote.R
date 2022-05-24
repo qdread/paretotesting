@@ -4,8 +4,8 @@
 library(tidyverse)
 library(cmdstanr)
 
-prod_mod1 <- cmdstan_model('~/GitHub/NEON/paretotesting/regression1_bygrp_v2.stan')
-prod_mod2 <- cmdstan_model('~/GitHub/NEON/paretotesting/regression2_bygrp_v4.stan')
+prod_mod1 <- cmdstan_model('~/GitHub/paretotesting/regression1_bygrp_v2.stan')
+prod_mod2 <- cmdstan_model('~/GitHub/paretotesting/regression2_bygrp_v4.stan')
 # They compile!!!
 
 # load the data to test it on real data
