@@ -43,11 +43,11 @@ parameters {
 
 model {
 	// Priors: Hinged production
-	mu_beta0 ~ lognormal(1, 1);
-	mu_beta1_low ~ lognormal(1, 1);
-	mu_beta1_high ~ lognormal(1, 1);
-	log_mu_x0 ~ normal(1, 1);
-	delta ~ exponential(10);
+	mu_beta0 ~ lognormal(0.05, 0.5);
+	mu_beta1_low ~ lognormal(log(2), 0.5);
+	mu_beta1_high ~ lognormal(log(2), 0.5);
+	log_mu_x0 ~ normal(log(10), 1);
+	delta ~ exponential(1);
 	
 	sigma ~ exponential(0.1);
 	sigma_x0 ~ exponential(1);
