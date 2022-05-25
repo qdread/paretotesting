@@ -46,7 +46,7 @@ parameters {
 
 model {
 	// Prior: two part density
-	// No prior set for tau (uniform on its interval)
+	tau_mean ~ normal(10, 5);
 	log_alpha_low_mean ~ normal(1, 1);	
 	log_alpha_high_mean ~ normal(1, 1);
 	

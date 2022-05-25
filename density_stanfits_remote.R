@@ -42,10 +42,10 @@ if (mod == '2') {
   
   dens_fit <- dens_mod$sample(
     data = density_data_dump,
-    seed = 222,
+    seed = 2222,
     chains = 4,
     parallel_chains = 4,
-    iter_warmup = 2000,
+    iter_warmup = 4000,
     iter_sampling = 1000
   )
   
@@ -60,10 +60,10 @@ if (mod == '3') {
   
   dens_fit <- dens_mod$sample(
     data = density_data_dump,
-    seed = 555,
+    seed = 5555,
     chains = 4,
     parallel_chains = 4,
-    iter_warmup = 2000,
+    iter_warmup = 4000,
     iter_sampling = 1000
   )
   
