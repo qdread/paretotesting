@@ -31,10 +31,10 @@ parameters {
 	real<lower=0> delta;
 	real<lower=0> sigma;
 	
-	vector[M] x0_fg;
-	vector[M] beta0_fg;
-	vector[M] beta1_low_fg;
-	vector[M] beta1_high_fg;
+	vector[M] log_x0_fg;
+	vector[M] log_beta0_fg;
+	vector[M] log_beta1_low_fg;
+	vector[M] log_beta1_high_fg;
 	real<lower=0> sigma_x0;
 	real<lower=0> sigma_beta0;
 	real<lower=0> sigma_beta1_low;
