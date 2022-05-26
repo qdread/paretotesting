@@ -40,10 +40,10 @@ if (mod == '2') {
   
   prod_fit <- prod_mod$sample(
     data = production_data_dump,
-    seed = 5243,
+    seed = 526,
     chains = 4,
     parallel_chains = 4,
-    iter_warmup = 4000,
+    iter_warmup = 5000,
     iter_sampling = 1000,
     init = function(chain_id) list(delta = 1)
   )

@@ -24,10 +24,10 @@ transformed data {
 
 parameters {
 	// Hinged production. All parameters will vary by functional group except delta (smoothing parameter).
-	real<lower=0> log_mu_x0;
-	real<lower=0> mu_beta0;
-	real<lower=0> mu_beta1_low;
-	real<lower=0> mu_beta1_high;
+	real log_mu_x0;
+	real log_mu_beta0;
+	real log_mu_beta1_low;
+	real log_mu_beta1_high;
 	real<lower=0> delta;
 	real<lower=0> sigma;
 	
@@ -43,9 +43,9 @@ parameters {
 
 model {
 	// Priors: Hinged production
-	mu_beta0 ~ normal(0, 1);
-	mu_beta1_low ~ normal(log(2), 1);
-	mu_beta1_high ~ normal(log(2), 1);
+	log_mu_beta0 ~ normal(0, 1);
+	log_mu_beta1_low ~ normal(log(2), 1);
+	log_mu_beta1_high ~ normal(log(2), 1);
 	log_mu_x0 ~ normal(log(10), 1);
 	delta ~ exponential(1);
 	
@@ -56,9 +56,9 @@ model {
 	sigma_beta1_high ~ exponential(1);
 		
 	log_x0_fg ~ normal(log_mu_x0, sigma_x0);
-	log_beta0_fg ~ normal(mu_beta0, sigma_beta0);
-	log_beta1_low_fg ~ normal(mu_beta1_low, sigma_beta1_low);
-	log_beta1_high_fg ~ normal(mu_beta1_high, sigma_beta1_high);
+	log_beta0_fg ~ normal(log_mu_beta0, sigma_beta0);
+	log_beta1_low_fg ~ normal(log_mu_beta1_low, sigma_beta1_low);
+	log_beta1_high_fg ~ normal(log_mu_beta1_high, sigma_beta1_high);
 
 	// Likelihood: hinged production
 	{
