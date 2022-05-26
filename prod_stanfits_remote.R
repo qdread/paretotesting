@@ -13,7 +13,7 @@ set.seed(52522)
 dat <- alltreedat[[3]] %>%
   filter(!is.na(fg)) %>%
   group_by(fg) %>%
-  sample_n(5000)
+  sample_n(7500)
 
 production_data_dump <- with(dat, list(N = nrow(dat), M = 5, x = dbh_corr, y = production, x_min = 1, x_max = 286, fg = as.numeric(factor(fg))))
 
@@ -40,12 +40,12 @@ if (mod == '2') {
   
   prod_fit <- prod_mod$sample(
     data = production_data_dump,
-    seed = 526,
+    seed = 5262,
     chains = 4,
     parallel_chains = 4,
-    iter_warmup = 5000,
+    iter_warmup = 7500,
     iter_sampling = 1000,
-    init = function(chain_id) list(delta = 1)
+    init = function(chain_id) list(delta = 0.1)
   )
   
 }
