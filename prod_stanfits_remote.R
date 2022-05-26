@@ -36,11 +36,11 @@ if (mod == '1') {
 
 if (mod == '2') {
   
-  prod_mod <- cmdstan_model('~/GitHub/paretotesting/regression2_bygrp_v4.stan')
+  prod_mod <- cmdstan_model('~/GitHub/paretotesting/regression2_bygrp_v5.stan')
   
   prod_fit <- prod_mod$sample(
     data = production_data_dump,
-    seed = 5242,
+    seed = 5243,
     chains = 4,
     parallel_chains = 4,
     iter_warmup = 4000,
