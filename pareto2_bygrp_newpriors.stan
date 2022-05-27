@@ -24,35 +24,35 @@ data {
 	int<lower=0> M;
 	vector<lower=0>[N] x;
 	vector<lower=0>[N] y;
-  real<lower=0> x_min;
-  real<lower=0> x_max;
+    real<lower=0> x_min;
+    real<lower=0> x_max;
 	int<lower=1,upper=M> fg[N];	// Mapping to groups 1-M
 }
 
 parameters {
 	// Two part density
-	real<lower=x_min, upper=x_max> tau_mean;
-	vector[M] tau_fg;
-	real<lower=0> sigma_tau;
+	real log_mu_alpha_low;
+	vector[M] log_alpha_low_fg;			// Slope for each group, lower portion
+	real<lower=0> sigma_alpha_low;		// SD of slopes, lower portion
 	
-	real log_alpha_low_mean;
-	vector[M] alpha_low_fg;			// Deviation of each group from mean intercept
-	real<lower=0> sigma_alpha_low;	// Variation in intercepts
+	real log_mu_alpha_high;
+	vector[M] log_alpha_high_fg;		// Slope of each group, upper portion
+	real<lower=0> sigma_alpha_high;		// SD of slopes, upper portion
 	
-	real log_alpha_high_mean;
-	vector[M] alpha_high_fg;		// Deviation of each group from mean intercept
-	real<lower=0> sigma_alpha_high;	// Variation in intercepts
+	real<lower=log(x_min), upper=log(x_max)> log_mu_tau;
+	vector[M] log_tau_fg;				// Breakpoint for each group
+	real<lower=0> sigma_tau;			// SD of breakpoints
 }
 
 model {
 	// Prior: two part density
-	tau_mean ~ normal(10, 5);
-	log_alpha_low_mean ~ normal(1, 1);	
-	log_alpha_high_mean ~ normal(1, 1);
+	log_mu_alpha_low ~ normal(1, 1);	
+	log_mu_alpha_high ~ normal(1, 1);
+	log_mu_tau ~ normal(log(10), 1);
 	
-	alpha_low_fg ~ normal(0, sigma_alpha_low);
-	alpha_high_fg ~ normal(0, sigma_alpha_high);
-	tau_fg ~ normal(0, sigma_tau);
+	log_alpha_low_fg ~ normal(log_mu_alpha_low, sigma_alpha_low);
+	log_alpha_high_fg ~ normal(log_mu_alpha_high, sigma_alpha_high);
+	log_tau_fg ~ normal(log_mu_tau, sigma_tau);
 	
 	sigma_alpha_low ~ exponential(1);
 	sigma_alpha_high ~ exponential(1);
@@ -60,14 +60,16 @@ model {
 	
 	// Likelihood: two part density
 	for (i in 1:N) {
-		x[i] ~ logtwopart(exp(log_alpha_low_mean + alpha_low_fg[fg[i]]), exp(log_alpha_high_mean + alpha_high_fg[fg[i]]), tau_mean + tau_fg[fg[i]], x_min);
+		x[i] ~ logtwopart(exp(log_alpha_low_fg[fg[i]]), exp(log_alpha_high_fg[fg[i]]), exp(log_tau_fg[fg[i]]), x_min);
 	}
 }
 
+/*
 generated quantities {
 	vector[N] log_lik; // Log-likelihood for getting info criteria later
 		
 	for (i in 1:N) {
-		log_lik[i] = logtwopart_lpdf(x[i] | exp(log_alpha_low_mean + alpha_low_fg[fg[i]]), exp(log_alpha_high_mean + alpha_high_fg[fg[i]]), tau_mean + tau_fg[fg[i]], x_min);
+		log_lik[i] = logtwopart_lpdf(x[i] | exp(log_alpha_low_fg[fg[i]]), exp(log_alpha_high_fg[fg[i]]), exp(log_tau_fg[fg[i]]), x_min);
 	}
 }
+*/
