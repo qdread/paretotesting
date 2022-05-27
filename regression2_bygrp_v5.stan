@@ -55,7 +55,7 @@ model {
 	sigma_beta1_low ~ exponential(1);
 	sigma_beta1_high ~ exponential(1);
 		
-	log_tau_fg ~ normal(log_mu_tau, sigma_x0);
+	log_tau_fg ~ normal(log_mu_tau, sigma_tau);
 	log_beta0_fg ~ normal(log_mu_beta0, sigma_beta0);
 	log_beta1_low_fg ~ normal(log_mu_beta1_low, sigma_beta1_low);
 	log_beta1_high_fg ~ normal(log_mu_beta1_high, sigma_beta1_high);
