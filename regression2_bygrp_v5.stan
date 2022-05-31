@@ -47,13 +47,13 @@ model {
 	log_mu_beta1_low ~ normal(1, 1);
 	log_mu_beta1_high ~ normal(1, 1);
 	log_mu_tau ~ normal(log(10), 1);
-	delta ~ exponential(1);
+	delta ~ gamma(1.1, 1);
 	
-	sigma ~ exponential(0.1);
-	sigma_tau ~ exponential(1);
-	sigma_beta0 ~ exponential(1);
-	sigma_beta1_low ~ exponential(1);
-	sigma_beta1_high ~ exponential(1);
+	sigma ~ gamma(5, 1);
+	sigma_tau ~ gamma(1.5, 4);
+	sigma_beta0 ~ gamma(1.5, 4);
+	sigma_beta1_low ~ gamma(1.5, 4);
+	sigma_beta1_high ~ gamma(1.5, 4);
 		
 	log_tau_fg ~ normal(log_mu_tau, sigma_tau);
 	log_beta0_fg ~ normal(log_mu_beta0, sigma_beta0);

@@ -27,8 +27,8 @@ data {
 	int<lower=0> M;
 	vector<lower=0>[N] x;
 	vector<lower=0>[N] y;
-    real<lower=0> x_min;
-    real<lower=0> x_max;
+  real<lower=0> x_min;
+  real<lower=0> x_max;
 	int<lower=1,upper=M> fg[N];	// Mapping to groups 1-M
 }
 
@@ -69,11 +69,11 @@ model {
 	log_tau_low_fg ~ normal(log_mu_tau_low, sigma_tau_low);
 	log_tau_high_fg ~ normal(log_mu_tau_high, sigma_tau_high);
 	
-	sigma_alpha_low ~ exponential(1);
-	sigma_alpha_mid ~ exponential(1);
-	sigma_alpha_high ~ exponential(1);
-	sigma_tau_low ~ exponential(1);
-	sigma_tau_high ~ exponential(1);
+	sigma_alpha_low ~ gamma(1.5, 4);
+	sigma_alpha_mid ~ gamma(1.5, 4);
+	sigma_alpha_high ~ gamma(1.5, 4);
+	sigma_tau_low ~ gamma(1.5, 4);
+	sigma_tau_high ~ gamma(1.5, 4);
 	
 	// Likelihood: three part density
 	for (i in 1:N) {
