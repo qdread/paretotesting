@@ -10,7 +10,7 @@ dj_mod <- cmdstan_model('diamreg_jcurve.stan')
 # Load data
 load('~/GitHub/old_projects/forestscalingworkflow/data/rawdataobj1995.RData')
 
-diam_data <- alltreedat %>%
+diam_data <- alltreedat[[3]] %>%
   filter(!is.na(fg)) %>%
   select(fg, dbh_corr, diam_growth_rate)
 
