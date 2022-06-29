@@ -22,7 +22,7 @@ djcurve_fit <- dj_mod$sample(
   seed = 27701,
   chains = 4,
   parallel_chains = 4,
-  iter_warmup = 2000,
+  iter_warmup = 4000,
   iter_sampling = 1000
 )
 

@@ -27,10 +27,11 @@ jcurve_fit <- j_mod$sample(
   seed = 27701,
   chains = 4,
   parallel_chains = 4,
-  iter_warmup = 2000,
+  iter_warmup = 4000,
   iter_sampling = 1000
 )
 
+if (!file.exists('~/temp/forestlight/mort_lin_fit.rds')) {
 lin_fit <- lin_mod$sample(
   data = mort_data_dump,
   seed = 27705,
@@ -39,10 +40,12 @@ lin_fit <- lin_mod$sample(
   iter_warmup = 2000,
   iter_sampling = 1000
 )
+lin_fit$save_object('~/temp/forestlight/mort_lin_fit.rds')
+}
 
 # Save object
 jcurve_fit$save_object('~/temp/forestlight/mort_jcurve_fit.rds')
-lin_fit$save_object('~/temp/forestlight/mort_lin_fit.rds')
+
 
 # Check model summary
 jcurve_summ <- jcurve_fit$summary() # This did not really converge but it is probably OK for now
