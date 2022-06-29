@@ -30,8 +30,8 @@ parameters {
 
 model {
 	// Priors
-	alpha ~ normal(0, 10);
-	beta ~ normal(0, 2);
+	alpha ~ normal(0, 2);
+	beta ~ normal(0, 5);
 	gamma ~ normal(0, 2);
 	alpha_fg ~ normal(alpha, sigma_alpha);
 	beta_fg ~ normal(beta, sigma_beta);
