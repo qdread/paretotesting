@@ -37,8 +37,8 @@ model {
 	beta_fg ~ normal(beta, sigma_beta);
 	gamma_fg ~ normal(gamma, sigma_gamma);
 	sigma_alpha ~ gamma(1, 1);
-	sigma_beta ~ gamma(1, 1);
-	sigma_gamma ~ gamma(1, 1);
+	sigma_beta ~ gamma(0.1, 0.1);
+	sigma_gamma ~ gamma(0.1, 0.1);
 		
 	// Likelihood
 	y ~ bernoulli_logit(alpha_fg[fg] + beta_fg[fg] .* log10_x .* exp(gamma_fg[fg] .* log10_x));
