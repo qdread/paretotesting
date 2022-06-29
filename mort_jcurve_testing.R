@@ -40,6 +40,10 @@ lin_fit <- lin_mod$sample(
   iter_sampling = 1000
 )
 
+# Save object
+jcurve_fit$save_object('~/temp/forestlight/mort_jcurve_fit.rds')
+lin_fit$save_object('~/temp/forestlight/mort_lin_fit.rds')
+
 # Check model summary
 jcurve_summ <- jcurve_fit$summary() # This did not really converge but it is probably OK for now
 

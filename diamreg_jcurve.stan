@@ -1,18 +1,20 @@
-// Logistic regression to model mortality as a function of diameter
-// Model includes exponential term to allow mortality to increase at large diameters
-// QDR 27 June 2022
+// Log-linear regression to model yearly diameter growth as a function of diameter
+// Model includes exponential term to allow growth to decrease or flatten off at larger diameters
+// QDR 28 June 2022
 			
 data {
 	int<lower=0> N;				// Number of trees
 	int<lower=0> M;				// Number of FGs
-	vector<lower=0>[N] x;		// x variable: Light per area or DBH
-	int<lower=0,upper=1> y[N];	// Mortality 1990-1995
+	vector<lower=0>[N] x;		// x variable (e.g. DBH)
+	vector<lower=0>[N] y;		// Diameter growth 1990-1995
 	int<lower=1,upper=M> fg[N];	// Mapping to functional groups 1-M
 }
 
 transformed data {
 	vector[N] log10_x;
 	log10_x = log10(x);
+	vector[N] log10_y;
+	log10_y = log10(y);
 }
 
 parameters {
@@ -25,7 +27,7 @@ parameters {
 	real gamma;							// Mean coefficient on exponential term
 	vector[M] gamma_fg;					// Deviation of each FG from mean exponential coefficient
 	real<lower=0> sigma_gamma;			// Variation in exponential coefficient
-	
+	real sigma;							// Residual standard deviation
 }
 
 model {
@@ -39,8 +41,9 @@ model {
 	sigma_alpha ~ gamma(1, 1);
 	sigma_beta ~ gamma(1, 1);
 	sigma_gamma ~ gamma(1, 1);
+	sigma ~ gamma(1, 1);
 		
 	// Likelihood
-	y ~ bernoulli_logit(alpha_fg[fg] + beta_fg[fg] .* log10_x .* exp(gamma_fg[fg] .* log10_x));
+	log10_y ~ normal(alpha_fg[fg] + beta_fg[fg] .* log10_x .* exp(gamma_fg[fg] .* log10_x), sigma);
 
 }
