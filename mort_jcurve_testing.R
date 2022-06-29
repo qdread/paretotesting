@@ -24,10 +24,10 @@ mort_data_dump <- with(mort_data, list(N = nrow(mort_data), M = 5, x = dbh, y = 
 # Sample model
 jcurve_fit <- j_mod$sample(
   data = mort_data_dump,
-  seed = 27701,
+  seed = 629,
   chains = 4,
   parallel_chains = 4,
-  iter_warmup = 4000,
+  iter_warmup = 6000,
   iter_sampling = 1000
 )
 

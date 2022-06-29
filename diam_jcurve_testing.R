@@ -19,10 +19,10 @@ diam_data_dump <- with(diam_data, list(N = nrow(diam_data), M = 5, x = dbh_corr,
 # Sample model
 djcurve_fit <- dj_mod$sample(
   data = diam_data_dump,
-  seed = 27701,
+  seed = 629,
   chains = 4,
   parallel_chains = 4,
-  iter_warmup = 4000,
+  iter_warmup = 6000,
   iter_sampling = 1000
 )
 
