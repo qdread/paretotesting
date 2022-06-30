@@ -21,7 +21,7 @@ diam_jcurve_fixef_fit <- brm(
     gamma ~ fg,
     nl = TRUE
   ),
-  data = diam_data_sub, family = gaussian(link = 'identity'),
+  data = diam_data, family = gaussian(link = 'identity'),
   prior = c(
     prior(normal(0, 5), nlpar = alpha),
     prior(normal(0, 5), nlpar = beta),
