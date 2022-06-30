@@ -5,6 +5,8 @@ library(readr)
 library(tidybayes)
 library(brms)
 
+options(mc.cores = 4, brms.backend = 'cmdstanr', brms.file_refit = 'on_change')
+
 # Load data
 load('~/GitHub/old_projects/forestscalingworkflow/data/rawdataobj1995.RData')
 
