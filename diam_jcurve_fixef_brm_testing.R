@@ -5,7 +5,7 @@ library(readr)
 library(tidybayes)
 library(brms)
 
-options(mc.cores = 4, brms.backend = 'cmdstanr', brms.file_refit = 'always')
+options(mc.cores = 4, brms.backend = 'cmdstanr', brms.file_refit = 'on_change')
 
 # Load data
 load('~/GitHub/old_projects/forestscalingworkflow/data/rawdataobj1995.RData')
@@ -25,9 +25,9 @@ diam_jcurve_fixef_fit <- brm(
   ),
   data = diam_data, family = gaussian(link = 'identity'),
   prior = c(
-    prior(normal(0, 5), nlpar = alpha),
-    prior(normal(0, 5), nlpar = beta),
-    prior(normal(0, 5), nlpar = gamma)
+    prior(normal(0, 2), nlpar = alpha),
+    prior(normal(1, 2), nlpar = beta),
+    prior(normal(0, 2), nlpar = gamma)
   ),
   chains = 4, iter = 5000, warmup = 4000, seed = 27704,
   file = '~/temp/forestlight/diam_jcurve_fixef_brmfit'

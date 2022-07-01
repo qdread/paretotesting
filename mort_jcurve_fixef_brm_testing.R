@@ -33,9 +33,9 @@ mort_jcurve_fixef_fit <- brm(
   prior = c(
     prior(normal(0, 5), nlpar = alpha),
     prior(normal(0, 5), nlpar = beta),
-    prior(normal(0, 5), nlpar = gamma)
+    prior(normal(0, 2), nlpar = gamma)
   ),
-  chains = 4, iter = 2000, warmup = 1000, seed = 27701,
+  chains = 4, iter = 5000, warmup = 4000, seed = 27713,
   file = '~/temp/forestlight/mort_jcurve_fixef_brmfit'
 )
 
