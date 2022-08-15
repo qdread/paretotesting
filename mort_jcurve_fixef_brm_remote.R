@@ -18,9 +18,9 @@ mort_data <- mort %>%
 mort_jcurve_fixef_fit <- brm(
   bf(
     died ~ exp(alpha) + -exp(beta) * log(dbh) * exp(gamma * log(dbh)),
-    alpha ~ 1 + fg,
-    beta ~ 1 + fg,
-    gamma ~ 1 + fg,
+    alpha ~ 0 + fg,
+    beta ~ 0 + fg,
+    gamma ~ 0 + fg,
     nl = TRUE
   ),
   data = mort_data, family = bernoulli(link = 'logit'),
@@ -32,3 +32,27 @@ mort_jcurve_fixef_fit <- brm(
   chains = 4, iter = 3000, warmup = 2000, seed = 27701,
   file = '~/temp/forestlight/mort_jcurve_fixef_brmfit'
 )
+
+
+# Postprocessing and plotting locally -------------------------------------
+
+# library(tidybayes)
+# library(ggplot2)
+# 
+# # Read pre-created mortality bins for plotting to compare to fitted values
+# mort_bins <- read_csv('~/GitHub/old_projects/forestscalingworkflow/data/data_forplotting/obs_mortalitybins.csv')
+# 
+# # Prediction grid: dbh x fg
+# dbh_pred <- exp(seq(log(1), log(285), length.out = 50))
+# pred_dat <- expand.grid(dbh = dbh_pred, fg = paste0('fg', 1:5))
+# 
+# # Get epred values
+# jcurve_pred <- pred_dat %>%
+#   add_epred_draws(mort_jcurve_fixef_fit)
+# 
+# ### Quick diag. plot
+# ggplot(mort_bins %>% filter(variable == "dbh", !fg %in% "unclassified", (lived+died) > 20), aes(x=bin_midpoint, y=mortality)) +
+#   stat_lineribbon(aes(y = .epred, x = dbh), data = jcurve_pred) +
+#   geom_point() +
+#   facet_wrap(~ fg, scales = 'free_x') + scale_x_log10() + scale_y_log10() +
+#   scale_fill_brewer(palette = 'Blues') + theme_bw()
