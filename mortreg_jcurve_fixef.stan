@@ -1,7 +1,8 @@
 // Logistic regression to model mortality as a function of diameter
 // Model includes exponential term to allow mortality to increase at large diameters
 // Functional groups are fit as fixed effects
-// QDR 27 June 2022
+// Exponentiate the alpha and beta parameters to ensure that alpha is always positive and beta is negative
+// QDR 15 August 2022
 			
 data {
 	int<lower=0> N;				      // Number of trees
@@ -26,10 +27,10 @@ parameters {
 model {
 	// Priors
 	alpha ~ normal(0, 2);
-	beta ~ normal(0, 5);
+	beta ~ normal(0, 2);
 	gamma ~ normal(0, 2);
 
 	// Likelihood
-	y ~ bernoulli_logit(alpha[fg] + beta[fg] .* log10_x .* exp(gamma[fg] .* log10_x));
+	y ~ bernoulli_logit(exp(alpha[fg]) + -exp(beta[fg]) .* log10_x .* exp(gamma[fg] .* log10_x));
 
 }
