@@ -17,7 +17,7 @@ mort_data <- mort %>%
 
 mort_jcurve_fixef_fit <- brm(
   bf(
-    died ~ exp(alpha) + -exp(beta) * log(dbh) * exp(gamma * log(dbh)),
+    died ~ alpha + -exp(beta) * log(dbh) * exp(gamma * log(dbh)),
     alpha ~ 0 + fg,
     beta ~ 0 + fg,
     gamma ~ 0 + fg,
@@ -43,16 +43,23 @@ mort_jcurve_fixef_fit <- brm(
 # mort_bins <- read_csv('~/GitHub/old_projects/forestscalingworkflow/data/data_forplotting/obs_mortalitybins.csv')
 # 
 # # Prediction grid: dbh x fg
-# dbh_pred <- exp(seq(log(1), log(285), length.out = 50))
-# pred_dat <- expand.grid(dbh = dbh_pred, fg = paste0('fg', 1:5))
+# # Limit ranges to the observed data points
+# mort_max <- mort_bins %>% 
+#   filter((lived + died) > 20, variable %in% 'dbh', fg %in% paste0('fg', 1:5)) %>%
+#   group_by(fg) %>%
+#   filter(bin_midpoint == max(bin_midpoint))
+# 
+# pred_dat <- mort_max %>%
+#   group_by(fg) %>%
+#   group_modify(~ data.frame(dbh = exp(seq(log(1), log(.$bin_midpoint), length.out = 50))))
 # 
 # # Get epred values
 # jcurve_pred <- pred_dat %>%
 #   add_epred_draws(mort_jcurve_fixef_fit)
 # 
 # ### Quick diag. plot
-# ggplot(mort_bins %>% filter(variable == "dbh", !fg %in% "unclassified", (lived+died) > 20), aes(x=bin_midpoint, y=mortality)) +
+# ggplot(mort_bins %>% filter(variable == "dbh", fg %in% paste0('fg', 1:5), (lived+died) > 20), aes(x=bin_midpoint, y=mortality)) +
 #   stat_lineribbon(aes(y = .epred, x = dbh), data = jcurve_pred) +
-#   geom_point() +
-#   facet_wrap(~ fg, scales = 'free_x') + scale_x_log10() + scale_y_log10() +
+#   geom_point(aes(size = lived+died)) +
+#   facet_wrap(~ fg) + scale_x_log10() + scale_y_log10() + scale_size(trans = 'log10', range = c(0.5, 4)) +
 #   scale_fill_brewer(palette = 'Blues') + theme_bw()
