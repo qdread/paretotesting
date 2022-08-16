@@ -17,22 +17,23 @@ diam_data <- alltreedat[[3]] %>%
   select(fg, dbh_corr, diam_growth_rate) %>%
   mutate(fg = paste0('fg', fg))
 
-# Set number of bins       
-numbins <- 20
-
-# Make a version of alltreedat without the unclassified trees
-alltreedat_classified <- map(alltreedat, ~ filter(., !is.na(fg)))
-
-# Bin classified trees. (log binning of density)
-allyeardbh_classified <- map(alltreedat_classified[-1], ~ pull(., dbh_corr)) %>% unlist
-dbhbin_allclassified <- logbin(x = allyeardbh_classified, y = NULL, n = numbins)
-
-diam_bins <- diam_data %>% 
-  group_by(fg) %>%
-  group_modify(~ cloudbin_across_years(dat_classes = .$dbh_corr, dat_values = .$diam_growth_rate, edges = dbhbin_allclassified, n_census = 1))
-
-ggplot(diam_bins, aes(x = bin_midpoint, y = median, ymin = q25, ymax = q75)) +
-  geom_pointrange() + facet_wrap(~fg) + scale_x_log10() + scale_y_log10()
+# ### Visualize trends before writing model
+# # Set number of bins       
+# numbins <- 20
+# 
+# # Make a version of alltreedat without the unclassified trees
+# alltreedat_classified <- map(alltreedat, ~ filter(., !is.na(fg)))
+# 
+# # Bin classified trees. (log binning of density)
+# allyeardbh_classified <- map(alltreedat_classified[-1], ~ pull(., dbh_corr)) %>% unlist
+# dbhbin_allclassified <- logbin(x = allyeardbh_classified, y = NULL, n = numbins)
+# 
+# diam_bins <- diam_data %>% 
+#   group_by(fg) %>%
+#   group_modify(~ cloudbin_across_years(dat_classes = .$dbh_corr, dat_values = .$diam_growth_rate, edges = dbhbin_allclassified, n_census = 1))
+# 
+# ggplot(diam_bins, aes(x = bin_midpoint, y = median, ymin = q25, ymax = q75)) +
+#   geom_pointrange() + facet_wrap(~fg) + scale_x_log10() + scale_y_log10()
 
 diam_jcurve_fixef_fit <- brm(
   bf(
