@@ -36,30 +36,33 @@ mort_jcurve_fixef_fit <- brm(
 
 # Postprocessing and plotting locally -------------------------------------
 
-# library(tidybayes)
-# library(ggplot2)
-# 
-# # Read pre-created mortality bins for plotting to compare to fitted values
-# mort_bins <- read_csv('~/GitHub/old_projects/forestscalingworkflow/data/data_forplotting/obs_mortalitybins.csv')
-# 
-# # Prediction grid: dbh x fg
-# # Limit ranges to the observed data points
-# mort_max <- mort_bins %>% 
-#   filter((lived + died) > 20, variable %in% 'dbh', fg %in% paste0('fg', 1:5)) %>%
-#   group_by(fg) %>%
-#   filter(bin_midpoint == max(bin_midpoint))
-# 
-# pred_dat <- mort_max %>%
-#   group_by(fg) %>%
-#   group_modify(~ data.frame(dbh = exp(seq(log(1), log(.$bin_midpoint), length.out = 50))))
-# 
-# # Get epred values
-# jcurve_pred <- pred_dat %>%
-#   add_epred_draws(mort_jcurve_fixef_fit)
-# 
-# ### Quick diag. plot
-# ggplot(mort_bins %>% filter(variable == "dbh", fg %in% paste0('fg', 1:5), (lived+died) > 20), aes(x=bin_midpoint, y=mortality)) +
-#   stat_lineribbon(aes(y = .epred, x = dbh), data = jcurve_pred) +
-#   geom_point(aes(size = lived+died)) +
-#   facet_wrap(~ fg) + scale_x_log10() + scale_y_log10() + scale_size(trans = 'log10', range = c(0.5, 4)) +
-#   scale_fill_brewer(palette = 'Blues') + theme_bw()
+library(tidybayes)
+library(ggplot2)
+
+# Read pre-created mortality bins for plotting to compare to fitted values
+mort_bins <- read_csv('~/GitHub/old_projects/forestscalingworkflow/data/data_forplotting/obs_mortalitybins.csv')
+
+# Prediction grid: dbh x fg
+# Limit ranges to the observed data points
+mort_max <- mort_bins %>%
+  filter((lived + died) > 20, variable %in% 'dbh', fg %in% paste0('fg', 1:5)) %>%
+  group_by(fg) %>%
+  filter(bin_midpoint == max(bin_midpoint))
+
+pred_dat <- mort_max %>%
+  group_by(fg) %>%
+  group_modify(~ data.frame(dbh = exp(seq(log(1), log(.$bin_midpoint), length.out = 50))))
+
+# Get epred values
+jcurve_pred <- pred_dat %>%
+  add_epred_draws(mort_jcurve_fixef_fit)
+
+### Quick diag. plot
+ggplot(mort_bins %>% filter(variable == "dbh", fg %in% paste0('fg', 1:5), (lived+died) > 20), aes(x=bin_midpoint, y=mortality)) +
+  stat_lineribbon(aes(y = .epred, x = dbh), data = jcurve_pred) +
+  geom_point(aes(size = lived+died), color = 'gray40') +
+  facet_wrap(~ fg) + scale_x_log10(name = 'diameter (cm)') + scale_y_log10() + 
+  scale_size(name = 'individuals', range = c(1, 3), breaks = c(1000, 3000, 10000, 30000)) +
+  scale_fill_brewer(palette = 'Blues') + 
+  theme_bw() +
+  theme(legend.position = c(0.8, 0.2), strip.background = element_blank())
