@@ -12,3 +12,4 @@ sbatch --job-name=prod2all --partition=medium --time=7-00:00:00 --export=s=prod_
 
 sbatch --job-name=mortjfixef --export=s=mort_jcurve_fixef_brm_remote.R --mem=16gb job.sh
 sbatch --job-name=diamjfixef --export=s=diam_jcurve_fixef_brm_remote.R --mem=16gb job.sh
+sbatch --job-name=diamjhinge --export=s=diam_loglin_fixef_brm.R --mem=16gb job.sh
