@@ -11,7 +11,7 @@ options(mc.cores = 4, brms.backend = 'cmdstanr', brms.file_refit = 'on_change')
 load('~/GitHub/old_projects/forestscalingworkflow/data/rawdataobj1995.RData')
 
 diam_data <- alltreedat[[3]] %>%
-  filter(!is.na(fg)) %>%
+  filter(!is.na(fg), !recruit) %>%
   select(fg, dbh_corr, diam_growth_rate) %>%
   mutate(fg = paste0('fg', fg))
 
@@ -32,9 +32,6 @@ diam_jcurve_fixef_fit <- brm(
   chains = 4, iter = 3000, warmup = 2000, seed = 27704,
   file = '~/temp/forestlight/diam_jcurve_fixef_brmfit'
 )
-
-### The above model doesn't well capture the actual J shape at low sizes. It may be necessary to change the functional form.
-
 
 # Postprocessing and plotting locally -------------------------------------
 

@@ -1,4 +1,5 @@
 # Testing new diameter model
+# Do not use recruits
 
 library(dplyr)
 library(readr)
@@ -11,7 +12,7 @@ options(mc.cores = 4, brms.backend = 'cmdstanr', brms.file_refit = 'on_change')
 load('~/GitHub/old_projects/forestscalingworkflow/data/rawdataobj1995.RData')
 
 diam_data <- alltreedat[[3]] %>%
-  filter(!is.na(fg)) %>%
+  filter(!is.na(fg), !recruit) %>%
   select(fg, dbh_corr, diam_growth_rate) %>%
   mutate(fg = paste0('fg', fg))
 
@@ -59,6 +60,7 @@ diam_hinge_fixef_fit <- brm(
 # library(ggplot2)
 # library(forestscaling)
 # library(purrr)
+# library(tidyr)
 # 
 # # Set number of bins
 # numbins <- 20
@@ -69,15 +71,22 @@ diam_hinge_fixef_fit <- brm(
 # # Bin classified trees. (log binning of density)
 # allyeardbh_classified <- map(alltreedat_classified[-1], ~ pull(., dbh_corr)) %>% unlist
 # dbhbin_allclassified <- logbin(x = allyeardbh_classified, y = NULL, n = numbins)
+# bin_edges <- c(dbhbin_allclassified$bin_min,dbhbin_allclassified$bin_max[numbins])
 # 
-# diam_bins <- diam_data %>%
-#   group_by(fg) %>%
-#   group_modify(~ cloudbin_across_years(dat_classes = .$dbh_corr, dat_values = .$diam_growth_rate, edges = dbhbin_allclassified, n_census = 1))
+# qprobs <- c(0.025, 0.25, 0.5, 0.75, 0.975)
+# diam_bins <- diam_data %>% 
+#   mutate(dbh_bin = cut(dbh_corr, breaks = bin_edges, include.lowest = TRUE)) %>%
+#   group_by(fg, dbh_bin) %>%
+#   summarize(p = qprobs, q = quantile(diam_growth_rate, probs = qprobs), n = n()) %>%
+#   pivot_wider(names_from = p, values_from = q) %>%
+#   setNames(c('fg', 'dbh_bin', 'n', 'q025', 'q25', 'median', 'q75', 'q975')) %>%
+#   mutate(bin_midpoint = dbhbin_allclassified$bin_midpoint[as.numeric(dbh_bin)])
+# 
 # 
 # # Prediction grid: dbh x fg
-# # Limit ranges to the observed data points
+# # Limit ranges to the observed data points and bins with > 20
 # diam_max <- diam_bins %>%
-#   filter(!is.na(mean)) %>%
+#   filter(n >= 20) %>%
 #   group_by(fg) %>%
 #   filter(bin_midpoint == max(bin_midpoint))
 # 
@@ -91,19 +100,19 @@ diam_hinge_fixef_fit <- brm(
 #   mutate(.epred = exp(.epred))
 # 
 # ### Quick diag. plot
-# ggplot(diam_bins, aes(x=bin_midpoint, y = median)) +
+# ggplot(diam_bins %>% filter(n >= 20), aes(x=bin_midpoint, y = median)) +
 #   stat_lineribbon(aes(y = .epred, x = dbh_corr), data = diamloglin_pred) +
 #   geom_pointrange(aes(ymin = q25, ymax = q75), color = 'gray40') +
-#   facet_wrap(~ fg) + scale_x_log10(name = 'diameter (cm)') + scale_y_log10() + 
-#   scale_fill_brewer(palette = 'Blues') + 
+#   facet_wrap(~ fg) + scale_x_log10(name = 'diameter (cm)') + scale_y_log10() +
+#   scale_fill_brewer(palette = 'Blues') +
 #   theme_bw() +
 #   theme(legend.position = c(0.8, 0.2), strip.background = element_blank())
 # 
-# ### Plot with all data points 
+# ### Plot with all data points
 # ggplot(diam_data, aes(x = dbh_corr, y = diam_growth_rate)) +
 #   geom_point(size = 0.5, alpha = 0.1) +
 #   stat_lineribbon(aes(y = .epred, x = dbh_corr), data = diamloglin_pred, color = 'blue4') +
-#   facet_wrap(~ fg) + scale_x_log10(name = 'diameter (cm)') + scale_y_log10() + 
-#   scale_fill_brewer(palette = 'Blues') + 
+#   facet_wrap(~ fg) + scale_x_log10(name = 'diameter (cm)') + scale_y_log10() +
+#   scale_fill_brewer(palette = 'Blues') +
 #   theme_bw() +
 #   theme(legend.position = c(0.8, 0.2), strip.background = element_blank())
